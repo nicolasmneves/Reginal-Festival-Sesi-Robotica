@@ -21,11 +21,20 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    xboxController.x().onTrue(intake.setDutyCycle(0.8));
-    xboxController.y().onTrue(intake.setDutyCycle(-0.8));
-    xboxController.a().onTrue(intake.in());
-    xboxController.b().onTrue(intake.out());
+  // xboxController.a().whileTrue(
+  //   Commands.run(() -> intake.setSpeed(1),intake));
 
+  // xboxController.b().whileTrue(
+  //   Commands.run(() -> intake.setSpeed(-1),intake));
+  
+  // xboxController.x().whileTrue(
+  //   Commands.run(() -> intake.setSpeed(0),intake));
+  // 
+
+    xboxController.a().onTrue(intake.setRPM(50));
+    xboxController.b().onTrue(intake.setRPM(-50));
+    xboxController.y().onTrue(intake.setRPM(0));
+  
   }
 
   public Command getAutonomousCommand() {
