@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -28,9 +29,11 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
+
 public class GarraIntakeSubsystem extends SubsystemBase {
 
-  private final TalonFX intakeMotor = new TalonFX(5);
+  private final TalonFX intakeMotor = new TalonFX(25);
+  private final TalonFX intakeFollowerMotor = new TalonFX(51);
 
 
   private final Mechanism2d m_mech = new Mechanism2d(40, 40);
@@ -52,9 +55,10 @@ public class GarraIntakeSubsystem extends SubsystemBase {
       .withTelemetry("IntakeMotor", TelemetryVerbosity.HIGH)
       .withStatorCurrentLimit(Amps.of(40))
       .withMotorInverted(false)
-      .withOpenLoopRampRate(Seconds.of(0.1));
+      .withOpenLoopRampRate(Seconds.of(0.1))
+      .withFollowers(new Pair<Object, Boolean>(intakeFollowerMotor, true));
 
-  private final SmartMotorController motor = new TalonFXWrapper(intakeMotor, DCMotor.getKrakenX44(1), motorConfig);
+  private final SmartMotorController motor = new TalonFXWrapper(intakeMotor, DCMotor.getKrakenX44(2), motorConfig);
   private final FlyWheelConfig intakeConfig = new FlyWheelConfig()
       .withDiameter(Inches.of(2))
       .withTelemetry("IntakeMech", TelemetryVerbosity.HIGH)

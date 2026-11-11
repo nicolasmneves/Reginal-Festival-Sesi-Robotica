@@ -4,40 +4,35 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Subsystems.DriveTrain;
 import frc.robot.Subsystems.GarraIntakeSubsystem;
 
 public class RobotContainer {
 
-  private GarraIntakeSubsystem intake = new GarraIntakeSubsystem();
-  public CommandXboxController xboxController = new CommandXboxController(0);
+  private final DriveTrain m_DriveTrain = new DriveTrain();
+  private final GarraIntakeSubsystem intake = new GarraIntakeSubsystem();
+
+  public final CommandXboxController xboxController = new CommandXboxController(0);
  
   public RobotContainer() {
-
     configureBindings();
+
+
+    new RunCommand(() -> m_DriveTrain.periodic(xboxController.getHID()))
+        .ignoringDisable(false)
+        .schedule();
   }
 
   private void configureBindings() {
 
-  // xboxController.a().whileTrue(
-  //   Commands.run(() -> intake.setSpeed(1),intake));
+    xboxController.y().onTrue(intake.setRPM(800));
+    xboxController.b().onTrue(intake.setRPM(600));
+    xboxController.x().onTrue(intake.setRPM(400));
+    
+    xboxController.a().onTrue(intake.setRPM(-1500)); // suga
 
-  // xboxController.b().whileTrue(
-  //   Commands.run(() -> intake.setSpeed(-1),intake));
-  
-  // xboxController.x().whileTrue(
-  //   Commands.run(() -> intake.setSpeed(0),intake));
-  // 
-
-    xboxController.a().onTrue(intake.setRPM(50));
-    xboxController.b().onTrue(intake.setRPM(-50));
-    xboxController.y().onTrue(intake.setRPM(0));
-  
-  }
-
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
-  }
+    xboxController.leftBumper().onTrue(intake.setRPM(0));
+}
 }
